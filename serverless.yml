@@ -1,0 +1,46 @@
+service: links
+frameworkVersion: '>=1.28.0 <2.0.0'
+
+provider:
+  name: aws
+  runtime: go1.x
+  memorySize: 128
+  stage: prod
+  region: ap-southeast-1
+  environment:
+    SERVICE_NAME: ${self:service}
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 'arn:aws:dynamodb:ap-southeast-1:646978820291:table/Links'
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+
+functions:
+  links:
+    handler: bin/links
+    events:
+      - http:
+          path: /{proxy+}
+          method: get
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: 'links.kylerwong.dev'
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: false
+    endpointType: 'regional'
