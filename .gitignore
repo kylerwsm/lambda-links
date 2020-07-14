@@ -1,6 +1,9 @@
 # Development environment variables.
 .env
 
+# Development output.
+build
+
 # Serverless directories
 .serverless
 node_modules

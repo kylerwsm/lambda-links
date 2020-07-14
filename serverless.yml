@@ -1,11 +1,11 @@
-service: links
+service: lambda-links
 frameworkVersion: '>=1.28.0 <2.0.0'
 
 provider:
   name: aws
   runtime: go1.x
   memorySize: 128
-  stage: prod
+  stage: pro
   region: ap-southeast-1
   environment:
     SERVICE_NAME: ${self:service}
@@ -25,8 +25,15 @@ package:
     - ./**
   include:
     - ./bin/**
+    - ./public/**
 
 functions:
+  base:
+    handler: bin/base
+    events:
+      - http:
+          path: /
+          method: get
   links:
     handler: bin/links
     events:
@@ -39,7 +46,7 @@ plugins:
 
 custom:
   customDomain:
-    domainName: 'links.kylerwong.dev'
+    domainName: 'go.kylerwong.dev'
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: false

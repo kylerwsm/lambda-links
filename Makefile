@@ -1,6 +1,7 @@
 .PHONY: build clean deploy
 
 build:
+	env GOOS=linux go build -ldflags="-s -w" -o bin/base functions/base/*.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/links functions/links/*.go
 
 # Install relevant packages for deployments via Serverless.
@@ -15,6 +16,5 @@ clean:
 	rm -rf ./bin ./vendor *.lock
 
 # Deploy a clean build to AWS Lambda via Serverless.
-deploy: clean build serverless-init
+deploy: clean build
 	sls deploy --verbose
-	make serverless-clean

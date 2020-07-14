@@ -5,7 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/kylerwsm/kyler-bot/pkg/entity"
+	"github.com/kylerwsm/lambda-links/pkg/entity"
 )
 
 // Declare DynamoDB instance which is safe for concurrent use.

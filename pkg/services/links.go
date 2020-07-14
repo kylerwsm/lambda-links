@@ -3,8 +3,8 @@ package services
 import (
 	"strings"
 
-	"github.com/kylerwsm/kyler-bot/pkg/entity"
-	"github.com/kylerwsm/kyler-bot/pkg/repositories"
+	"github.com/kylerwsm/lambda-links/pkg/entity"
+	"github.com/kylerwsm/lambda-links/pkg/repositories"
 )
 
 // ProcessShortLink preprocesses the input short link.

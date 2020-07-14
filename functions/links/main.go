@@ -2,26 +2,29 @@ package main
 
 import (
 	"context"
-	"net/http"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/kylerwsm/kyler-bot/pkg/services"
+	"github.com/kylerwsm/lambda-links/pkg/services"
+	"github.com/kylerwsm/lambda-links/pkg/util"
 )
 
-// Handler is our lambda handler.
+// Handler is our lambda handler for short link paths.
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	shortLink := request.Path[1:]
+	path := request.Path
+	if len(path) == 0 {
+		return util.ResponseNotFound(), nil
+	}
+	shortLink := path[1:]
 	link, err := services.GetLink(shortLink)
 	if err != nil {
-		return events.APIGatewayProxyResponse{StatusCode: http.StatusInternalServerError}, err
+		return util.ResponseInternalServerError(), err
 	}
 	if originalLink := link.OriginalLink; len(strings.TrimSpace(originalLink)) > 0 {
-		headers := map[string]string{"Location": link.OriginalLink}
-		return events.APIGatewayProxyResponse{StatusCode: http.StatusFound, Headers: headers}, nil
+		return util.ResponseFound(link.OriginalLink), nil
 	}
-	return events.APIGatewayProxyResponse{StatusCode: http.StatusNotFound}, nil
+	return util.ResponseNotFound(), nil
 }
 
 func main() {
